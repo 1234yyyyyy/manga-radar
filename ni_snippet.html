@@ -1,0 +1,15 @@
+<style>.ni{display:flex;align-items:center;gap:6px;margin:8px 12px 0;font-size:13px;color:#bbb;cursor:pointer;user-select:none}.ni input{width:16px;height:16px;accent-color:#e05050;pointer-events:none}.c.ni-on{opacity:.45}#nib{display:none;position:fixed;right:16px;bottom:16px;z-index:99;background:#e05050;color:#fff;border:0;border-radius:24px;padding:12px 18px;font-size:15px;box-shadow:0 2px 10px #0008;cursor:pointer}</style>
+<button id="nib" type="button"></button>
+<script>(function(){var K='ni_manga-radar',R='1234yyyyyy/manga-radar',st={};try{st=JSON.parse(localStorage.getItem(K)||'{}')}catch(e){}
+var btn=document.getElementById('nib');
+function save(){localStorage.setItem(K,JSON.stringify(st));var n=Object.keys(st).length;btn.textContent='送出不感興趣清單（'+n+'）';btn.style.display=n?'block':'none';}
+document.querySelectorAll('.c[data-ni]').forEach(function(c){var t=c.dataset.ni,l=document.createElement('label');l.className='ni';l.innerHTML='<input type="checkbox" class="nic"> 不感興趣';c.insertBefore(l,c.firstChild);var cb=l.querySelector('input');
+ if(st[t]){cb.checked=true;c.classList.add('ni-on')}
+ l.addEventListener('click',function(ev){ev.preventDefault();ev.stopPropagation();cb.checked=!cb.checked;
+  if(cb.checked)st[t]={g:c.dataset.g||''};else delete st[t];c.classList.toggle('ni-on',cb.checked);save();});});
+btn.addEventListener('click',function(){var d=new Date(Date.now()+8*36e5).toISOString().slice(0,10),ks=Object.keys(st),lines=[],cut=0;
+ for(var i=0;i<ks.length;i++){var ln='- ['+st[ks[i]].g+'] '+ks[i];if(encodeURIComponent(lines.join('\n')+ln).length>6000){cut=ks.length-i;break}lines.push(ln)}
+ var body='以下作品不感興趣，之後同類型請排除：\n\n'+lines.join('\n')+(cut?'\n\n（另有 '+cut+' 部因網址長度限制未列入，請送出後再按一次）':'');
+ window.__niurl='https://github.com/'+R+'/issues/new?labels=not-important&title='+encodeURIComponent('不感興趣回饋 '+d)+'&body='+encodeURIComponent(body);window.open(window.__niurl,'_blank');
+ if(confirm('送出後要清除這些勾選嗎？')){for(var j=0;j<lines.length;j++)delete st[ks[j]];document.querySelectorAll('.c[data-ni]').forEach(function(c){if(!st[c.dataset.ni]){c.classList.remove('ni-on');c.querySelector('.nic').checked=false}});save();}});
+save();})();</script>
